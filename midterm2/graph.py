@@ -58,7 +58,7 @@ class Graph(object):
 
     def __str__(self):
         return '{}({})'.format(self.__class__.__name__, dict(self._graph))
-
+    
     def __nodes__(self):
         """ Return the nodes in the graph """
         nodes = set()
@@ -67,3 +67,11 @@ class Graph(object):
             for v in value:
                 nodes.add(v)
         return nodes
+    
+    def get_parents(self, node):
+        parents = []
+        for key, value in self._graph.items():
+            #print (key, value)
+            if node in value:
+                parents.append(key)
+        return parents
