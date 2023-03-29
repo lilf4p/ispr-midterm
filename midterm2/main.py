@@ -1,22 +1,35 @@
-from bayes_net import BayesNetwork
+from bayes_net import BayesNetwork, Node 
+import numpy as np
 import pprint
 
-Burglary = {'False': 0.999, 'True': 0.001}
-Earthquake = {'False': 0.998, 'True': 0.002}
-Alarm = {
-    ('True', 'True', 'True'): 0.95,
-    ('True', 'True', 'False'): 0.05,
-    ('True', 'False', 'True'): 0.94,
-    ('True', 'False', 'False'): 0.06,
-    ('False', 'True', 'True'): 0.29,
-    ('False', 'True', 'False'): 0.71,
-    ('False', 'False', 'True'): 0.001,
-    ('False', 'False', 'False'): 0.999
-}
+burglary = Node(
+    cpt= { 'p' : [0.5,0.5] },
+    parents=None
+)
 
-cpt = {'Burglary': Burglary, 'Earthquake': Earthquake, 'Alarm': Alarm}
+earthquake = Node(
+    cpt= { 'p' : [0.5,0.5] },
+    parents=None
+)
 
-bn = BayesNetwork([('Burglary','Alarm'),('Earthquake','Alarm')],cpt)
+alarm = Node(
+    cpt= {
+        ('True', 'True'): [0.95,0.05],
+        ('True', 'False'): [0.94,0.06],
+        ('False', 'True'): [0.29,0.71],
+        ('False', 'False'): [0.001,0.999]
+    },
+    parents=['Burglary','Earthquake']
+)
 
-samples = bn.sample(5)
-pprint.pprint(samples)
+bn = BayesNetwork({'Alarm': alarm, 'Burglary': burglary, 'Earthquake': earthquake}, values=['True','False'])
+# from the given input BN class can construct the entire BN structure
+
+bn.print_graph()
+
+pp = pprint.PrettyPrinter(sort_dicts=False)
+samples = bn.sampling(5)
+pp.pprint(samples)
+
+bn.draw_graph()
+
