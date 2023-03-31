@@ -1,3 +1,8 @@
+# Bayesian Network from scratch in python
+
+Define a Bayesian Network simply by adding the conditional probabilty tables to the network. Support for binomial and multinomial distributions. The method 'sampling' is used to perform Ancestral Sampling. 
+
+'''
 from bayes_net import BayesNetwork, Node 
 import pprint
 
@@ -22,7 +27,6 @@ alarm = Node(
 )
 
 bn = BayesNetwork({'Alarm': alarm, 'Burglary': burglary, 'Earthquake': earthquake}, values=['True','False'])
-# from the given input BN class can construct the entire BN structure
 
 bn.print_graph()
 
@@ -31,4 +35,4 @@ samples = bn.sampling(5)
 pp.pprint(samples)
 
 bn.draw_graph()
-
+'''

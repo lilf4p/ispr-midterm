@@ -6,10 +6,13 @@ from node import Node
 import networkx as nx
 import matplotlib.pyplot as plt
 
-# TODO: implement automatic graph generation - need to be acyclic 
-# TODO: implement topological order of nodes
-# TODO: implement graphical representation of network
+# DONE: implement automatic graph generation - need to be acyclic 
+# DONE: implement topological order of nodes
+# DONE: implement graphical representation of network
 # TODO: use graph networkx to do all the work on graph
+# TODO: check acyclicity of graph
+# TODO: implement example of bayes network (notebook???)
+# TODO: add readme 
 
 
 class BayesNetwork:
