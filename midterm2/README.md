@@ -2,7 +2,7 @@
 
 Define a Bayesian Network simply by adding the conditional probabilty tables to the network. Support for binomial and multinomial distributions. The method 'sampling' is used to perform Ancestral Sampling. 
 
-'''
+```
 from bayes_net import BayesNetwork, Node 
 import pprint
 
@@ -35,4 +35,4 @@ samples = bn.sampling(5)
 pp.pprint(samples)
 
 bn.draw_graph()
-'''
+```
