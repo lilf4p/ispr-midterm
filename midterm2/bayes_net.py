@@ -5,14 +5,15 @@ import random
 from node import Node
 import networkx as nx
 import matplotlib.pyplot as plt
+import pprint
 
 # DONE: implement automatic graph generation - need to be acyclic 
 # DONE: implement topological order of nodes
 # DONE: implement graphical representation of network
 # TODO: use graph networkx to do all the work on graph
-# TODO: check acyclicity of graph
-# TODO: implement example of bayes network (notebook???)
-# TODO: add readme 
+# DONE: check acyclicity of graph
+# TODO: implement example module of bayes network (and a notebook???)
+# DONE: add readme 
 
 
 class BayesNetwork:
@@ -27,9 +28,9 @@ class BayesNetwork:
         #self.net = Graph(connections, directed=True, acyclic=True)
         self.nodes = nodes
         self.values = values 
-        G = nx.DiGraph()
-        G.add_edges_from(self.get_edges())
-        self.g = G
+        G = nx.DiGraph(self.get_edges())
+        if nx.is_directed_acyclic_graph(G): self.g = G
+        else: raise ValueError('Network is not acyclic.')
 
     def get_nodes(self):
         return list(self.nodes.keys())
@@ -42,6 +43,18 @@ class BayesNetwork:
                     edges.append((parent,key))
         return edges
     
+    
+    def graph(self):
+        g={}
+        for e in self.get_edges():
+            parent, child = e
+            if parent in g:
+                g[parent].append(child)
+            else:
+                g[parent] = [child]
+        return g
+        
+        
     def graph(self):
         g={}
         for e in self.get_edges():
@@ -126,13 +139,32 @@ class BayesNetwork:
     
     def print_graph(self):
         print('Graph:')
-        for key,val in self.graph().items():
-            print(' '+key+' -> ', end='')
-            for v in val:
-                print(v, end=', ')
-            print()
+        for p,c in self.g.edges:
+            print(' '+p+' -> '+c)
         print()
 
     def draw_graph(self):
-        nx.draw(self.g, with_labels=True, font_weight='bold', node_size=5000, font_size=11)
+        # Set node positions
+        pos = nx.planar_layout(self.g)
+
+        # Set options for graph looks
+        options = {
+            "font_size": 11,
+            "font_weight": "bold",
+            "node_size": 5000,
+            "node_color": "white",
+            "edgecolors": "black",
+            "edge_color": "black",
+            "linewidths": 3,
+            "arrowstyle": "-|>",
+            "arrowsize": 30,
+            "width": 3,}
+            
+        # Generate graph
+        nx.draw(self.g, with_labels=True, pos=pos, **options)
+
+        # Update margins and print the graph
+        ax = plt.gca()
+        ax.margins(0.10)
+        plt.axis("off")
         plt.show()
