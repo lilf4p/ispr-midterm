@@ -10,7 +10,7 @@ import pprint
 # DONE: implement automatic graph generation - need to be acyclic 
 # DONE: implement topological order of nodes
 # DONE: implement graphical representation of network
-# TODO: use graph networkx to do all the work on graph
+# DONE: use graph networkx to do all the work on graph
 # DONE: check acyclicity of graph
 # TODO: implement example module of bayes network (and a notebook???)
 # DONE: add readme 
@@ -41,29 +41,7 @@ class BayesNetwork:
             if node.get_parents() != None:
                 for parent in node.get_parents():
                     edges.append((parent,key))
-        return edges
-    
-    
-    def graph(self):
-        g={}
-        for e in self.get_edges():
-            parent, child = e
-            if parent in g:
-                g[parent].append(child)
-            else:
-                g[parent] = [child]
-        return g
-        
-        
-    def graph(self):
-        g={}
-        for e in self.get_edges():
-            parent, child = e
-            if parent in g:
-                g[parent].append(child)
-            else:
-                g[parent] = [child]
-        return g
+        return edges   
         
     def __str__(self):
         return '{}({})'.format(self.__class__.__name__, self.net)
