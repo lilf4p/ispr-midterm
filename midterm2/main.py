@@ -1,4 +1,5 @@
-from bayes_net import BayesNetwork, Node 
+from bayes_net import BayesNetwork
+from node import Node
 import pprint
 
 burglary = Node(
@@ -27,7 +28,7 @@ bn = BayesNetwork({'Alarm': alarm, 'Burglary': burglary, 'Earthquake': earthquak
 bn.print_graph()
 
 pp = pprint.PrettyPrinter(sort_dicts=False)
-samples = bn.sampling(5)
+samples = bn.sampling(5, init={'Burglary': 'True'})
 pp.pprint(samples)
 
 bn.draw_graph()

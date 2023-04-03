@@ -12,8 +12,10 @@ import pprint
 # DONE: implement graphical representation of network
 # DONE: use graph networkx to do all the work on graph
 # DONE: check acyclicity of graph
-# TODO: implement example module of bayes network (and a notebook???)
+# TODO: notebook with examples of BN
 # DONE: add readme 
+# TODO: add optional methods
+# TODO: add get cpt table method -> print it 
 
 
 class BayesNetwork:
@@ -25,7 +27,6 @@ class BayesNetwork:
 
     """
     def __init__(self, nodes: dict, values: list):
-        #self.net = Graph(connections, directed=True, acyclic=True)
         self.nodes = nodes
         self.values = values 
         G = nx.DiGraph(self.get_edges())
@@ -74,7 +75,7 @@ class BayesNetwork:
 
         return np.random.choice(values,p=probabilities)
 
-    def sampling (self, n=1, init: dict = None, seed: int = None) -> dict:
+    def sampling (self, n=1, init: dict = {}, seed: int = None) -> dict:
         """ Ancestral sampling n times from the network.
         
         Args:
@@ -85,35 +86,40 @@ class BayesNetwork:
         Returns:
             dict: n samples
         """
-        init = init or {}
         samples={} # n samples
 
         # take nodes from the network
 
-        # TODO: topological order of nodes
+        # DONE: topological order of nodes
         nodes = list(nx.topological_sort(self.g))
+        print('Topological ordering of nodes: ', end="")
         print(nodes)
 
         for iter in range(n):
             s = {} # i-esimo sample
-            for n in nodes: # get node in topological order
+            for nname in nodes: # get node in topological order
                 
-                node = self.nodes[n]
-                # get cpt of node
-                cpt = node.get_cpt() # cpt of the current node
-                
-                # get parents of node
-                parents = node.get_parents()
+                node = self.nodes[nname]
 
-                if parents == None: 
-                    s[n] = self.multi_choice(self.values, cpt['p'])
+                #check init state
+                if nname in init:
+                    s[nname] = init[nname]
                 else:
-                    s[n] = self.multi_choice(self.values, cpt[tuple([s[parent] for parent in parents])])
+                    # get cpt of node
+                    cpt = node.get_cpt() # cpt of the current node
+                    
+                    # get parents of node
+                    parents = node.get_parents()
+
+                    if parents == None: 
+                        s[nname] = self.multi_choice(self.values, cpt['p'])
+                    else:
+                        s[nname] = self.multi_choice(self.values, cpt[tuple([s[parent] for parent in parents])])
                             
             # add current sampling to samples
             samples[iter] = s
         
-        return samples
+        return samples        
     
     def print_graph(self):
         print('Graph:')
