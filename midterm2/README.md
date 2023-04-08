@@ -1,7 +1,5 @@
 # Bayesian Network from scratch in python
 
-![Bayesian Network example](images/burglary.png)
-
 I choose to implement the Bayesian Network in Python by writing a simple interface that allows the user to define its own custom network and run some experiments on it.
 
 Bayesian Network is implemented by two classes: `BayesianNetwork` and `Bnode`. The first one is the main class that contains the network structure and the second one is the class that represents a single node in the network.
@@ -146,3 +144,5 @@ pp.pprint(samples)
 
 bn.plot()
 ```
+
+<img src="images/burglary.png" width="500">
