@@ -1,5 +1,5 @@
 from bayes_net import BayesNetwork
-from node import Node
+from bnode import Node
 import pprint
 
 burglary = Node(

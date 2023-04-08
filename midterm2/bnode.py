@@ -1,4 +1,4 @@
-class Node:
+class Bnode:
 
     def __init__(self, cpt: dict, parents: list):
         """Bayes network node data structure.

@@ -1,3 +1,5 @@
 /.DS_Store
 .gitignore
-___pycache__/
+___pycache__
+.vscode
+/midterm2/___pycache__

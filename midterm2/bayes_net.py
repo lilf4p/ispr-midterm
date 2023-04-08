@@ -1,37 +1,41 @@
 # bayes network class
-from graph import Graph
 import numpy as np
 import random
-from node import Node
 import networkx as nx
-import matplotlib.pyplot as plt
-import pprint
+import graphviz 
 
 # DONE: implement automatic graph generation - need to be acyclic 
 # DONE: implement topological order of nodes
 # DONE: implement graphical representation of network
 # DONE: use graph networkx to do all the work on graph
 # DONE: check acyclicity of graph
-# TODO: notebook with examples of BN
+# TODO: notebook with examples of BN (MANDATORY)
 # DONE: add readme 
-# TODO: add optional methods
-# TODO: add get cpt table method -> print it 
+# TODO: add OPTIONAL methods
+# TODO: add get cpt table method -> print it (OPTIONAL)
+# DONE: fix graph drawing
 
 
 class BayesNetwork:
-    """ Bayes network data structure, undirected by default.
     
-    Attributes:
-        nodes (dict): Dictionary of nodes.
-        values (list): List of values that each node can take. Ex: ['True', 'False'] for binomial, [0,1,2,3] for multinomial.
-
-    """
     def __init__(self, nodes: dict, values: list):
+        """Bayes network data structure, undirected by default.
+    
+            Args:
+                nodes (dict): Dictionary of nodes. Each node is a BNode object.
+                values (list): List of values that each node can take. Ex: ['True', 'False'] for binomial, [0,1,2,3] for multinomial.
+        """
         self.nodes = nodes
         self.values = values 
         G = nx.DiGraph(self.get_edges())
+
+        # check acyclicity of graph
         if nx.is_directed_acyclic_graph(G): self.g = G
         else: raise ValueError('Network is not acyclic.')
+
+        # add nodes without edges to the graph
+        for node in self.get_nodes():
+            if node not in self.g.nodes: self.g.add_node(node)
 
     def get_nodes(self):
         return list(self.nodes.keys())
@@ -43,9 +47,6 @@ class BayesNetwork:
                 for parent in node.get_parents():
                     edges.append((parent,key))
         return edges   
-        
-    def __str__(self):
-        return '{}({})'.format(self.__class__.__name__, self.net)
     
     def bi_choice(self, probability : int, seed : int) -> str:
         """ Return True or False according to a given probability.
@@ -88,12 +89,14 @@ class BayesNetwork:
         """
         samples={} # n samples
 
-        # take nodes from the network
+        print('Ancestral sampling %d times from the network...' %(n))
+        print()
 
         # DONE: topological order of nodes
         nodes = list(nx.topological_sort(self.g))
         print('Topological ordering of nodes: ', end="")
         print(nodes)
+        print()
 
         for iter in range(n):
             s = {} # i-esimo sample
@@ -117,38 +120,40 @@ class BayesNetwork:
                         s[nname] = self.multi_choice(self.values, cpt[tuple([s[parent] for parent in parents])])
                             
             # add current sampling to samples
-            samples[iter] = s
+            samples[iter+1] = s
         
         return samples        
     
-    def print_graph(self):
-        print('Graph:')
+    def print(self):
+        """ Print on stdout the structure of the network.
+        """
+
+        print('Network:')
         for p,c in self.g.edges:
             print(' '+p+' -> '+c)
+        
+        # print nodes without edges
+        for node in self.g.nodes:
+            if self.g.out_degree(node) + self.g.in_degree(node) == 0: print(' '+node)
+
         print()
 
-    def draw_graph(self):
-        # Set node positions
-        pos = nx.planar_layout(self.g)
+    def plot(self) -> graphviz:
+        """ Plot the graph of the network.
 
-        # Set options for graph looks
-        options = {
-            "font_size": 11,
-            "font_weight": "bold",
-            "node_size": 5000,
-            "node_color": "white",
-            "edgecolors": "black",
-            "edge_color": "black",
-            "linewidths": 3,
-            "arrowstyle": "-|>",
-            "arrowsize": 30,
-            "width": 3,}
-            
-        # Generate graph
-        nx.draw(self.g, with_labels=True, pos=pos, **options)
+        Returns:    
+            graphviz: can be plotted automatically in jupyter notebook. 
+        """
 
-        # Update margins and print the graph
-        ax = plt.gca()
-        ax.margins(0.10)
-        plt.axis("off")
-        plt.show()
+        # convert graph to graphviz
+        A = nx.nx_agraph.to_agraph(self.g)
+        A.layout('dot')
+
+        # change color 
+        for node in A.iternodes():
+            node.attr['color'] = 'lightblue'
+            node.attr['style'] = 'filled'
+            node.attr['fontname'] = 'Futura'
+
+        return A
+    
