@@ -10,9 +10,10 @@ import graphviz
 # DONE: use graph networkx to do all the work on graph
 # DONE: check acyclicity of graph
 # TODO: notebook with examples of BN (MANDATORY)
+# TODO: COVID example (MANDATORY)
+# TODO: DAILY ROUTINE example (MANDATORY)
+# TODO: CONSIDERATIONS
 # DONE: add readme 
-# TODO: add OPTIONAL methods
-# TODO: add get cpt table method -> print it (OPTIONAL)
 # DONE: fix graph drawing
 
 

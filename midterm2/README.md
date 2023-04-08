@@ -1,5 +1,7 @@
 # Bayesian Network from scratch in python
 
+![Bayesian Network example](images/burglary.png)
+
 I choose to implement the Bayesian Network in Python by writing a simple interface that allows the user to define its own custom network and run some experiments on it.
 
 Bayesian Network is implemented by two classes: `BayesianNetwork` and `Bnode`. The first one is the main class that contains the network structure and the second one is the class that represents a single node in the network.
@@ -31,7 +33,7 @@ The `BayesianNetwork` class is defined as follows:
             if node not in self.g.nodes: self.g.add_node(node)
 
 ```
-    
+
 where `nodes` is a dictionary that maps the name of the node to the `Bnode` object, `values` is a list of the possible values of the nodes (e.g. `['T', 'F']`) and `g` is the *networkx* graph that represents the network structure. The constructor also checks if the network is acyclic and adds nodes without edges to the graph.
 
 The `sampling()` method of `BayesianNetwork` class implement the Ancestral Sampling algorithm. It takes as input the number of samples to generate and returns a dictionary that maps the sample number to the sample itself. It allows also to specify an initial state of the network by adding some evidemce to the network. Also a seed can be specified for reproducibility.
@@ -105,11 +107,11 @@ The `multi_choice()` method is a helper function that allows to sample from a mu
         if seed != None: random.seed(seed)
 
         return np.random.choice(values,p=probabilities)
-``` 
+```
 
 The `BayesianNetwork` class also has the methods `get_nodes()` and `get_edges()` to get nodes and edges of the network and the method `plot()` to plot the Bayesian Network with the *graphviz* module.
 
-## Usage 
+## Usage
 
 ``` python
 from bayes_net import BayesNetwork
@@ -137,13 +139,10 @@ alarm = Node(
 )
 
 bn = BayesNetwork({'Alarm': alarm, 'Burglary': burglary, 'Earthquake': earthquake}, values=['True','False'])
-# from the given input BN class can construct the entire BN structure
-
-bn.print_graph()
 
 pp = pprint.PrettyPrinter(sort_dicts=False)
 samples = bn.sampling(5, init={'Burglary': 'True'})
 pp.pprint(samples)
 
-bn.draw_graph()
+bn.plot()
 ```
