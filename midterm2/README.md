@@ -4,7 +4,7 @@ I choose to implement the Bayesian Network in Python by writing a simple interfa
 
 Bayesian Network is implemented by two classes: `BayesianNetwork` and `Bnode`. The first one is the main class that contains the network structure and the second one is the class that represents a single node in the network.
 
-The `Bnode` class is defined as follows:
+`Bnode` class is defined as follows:
 
 ```python
     def __init__(self, cpt: dict, parents: list):
@@ -14,7 +14,7 @@ The `Bnode` class is defined as follows:
 
 where `parents` is a list of the parents of the node and `cpt` is the conditional probability table of the node.
 
-The `BayesianNetwork` class is defined as follows:
+`BayesianNetwork` class is defined as follows:
 
 ```python
     def __init__(self, nodes: dict, values: list):
@@ -34,7 +34,7 @@ The `BayesianNetwork` class is defined as follows:
 
 where `nodes` is a dictionary that maps the name of the node to the `Bnode` object, `values` is a list of the possible values of the nodes (e.g. `['T', 'F']`) and `g` is the *networkx* graph that represents the network structure. The constructor also checks if the network is acyclic and adds nodes without edges to the graph.
 
-The `sampling()` method of `BayesianNetwork` class implement the Ancestral Sampling algorithm. It takes as input the number of samples to generate and returns a dictionary that maps the sample number to the sample itself. It allows also to specify an initial state of the network by adding some evidemce to the network. Also a seed can be specified for reproducibility.
+`sampling()` method implement the **Ancestral Sampling algorithm**. It takes as input the number of samples to generate and returns a dictionary that maps the sample number to the sample itself. It allows also to specify an initial state of the network by adding some evidemce to the network. Also a seed can be specified for reproducibility.
 
 ```python
     def sampling (self, n=1, init: dict = {}, seed: int = None) -> dict:
@@ -86,7 +86,39 @@ The `sampling()` method of `BayesianNetwork` class implement the Ancestral Sampl
         return samples        
 ```
 
-The `multi_choice()` method is a helper function that allows to sample from a multinomial or binomial distribution. It takes as input a list of possible values and a list of probabilities and returns a random value sampled from the distribution.
+`estimate()` method implement the **Rejection Sampling algorithm**. It takes as input the probabilities to estimate and the samplings from which compute. It returns a dict with the result of the estimation `P(X=x|e)`.
+
+``` python
+def estimate(self, X: str, x: str, e: dict, samples: dict) -> dict:
+        """ Estimate the probability of a node given a set of evidences.
+        
+        Args:
+            X (str): node to estimate.
+            x (str): value of X.
+            e (dict): evidences.
+            samples (dict): samples from the network.
+
+        Returns:
+            dict: probability distribution of X given e.
+        """
+        # count samples that agree with e
+        count = 0
+        for s in samples.values():
+            if all(s[key] == value for key, value in e.items()): count += 1
+        
+        # count samples that agree with e and X
+        count_X = 0
+        for s in samples.values():
+            if all(s[key] == value for key, value in e.items()) and s[X] == x: count_X += 1
+
+        # estimate probability
+        if count == 0: p = 0
+        else: p = count_X/count
+
+        return {X: {x: p, 'evidence':e}}
+```
+
+`multi_choice()` method is a helper function that allows to sample from a multinomial or binomial distribution. It takes as input a list of possible values and a list of probabilities and returns a random value sampled from the distribution.
 
 ```python
     def multi_choice(self, values: list, probabilities : list, seed : int = None) -> str:
@@ -107,7 +139,7 @@ The `multi_choice()` method is a helper function that allows to sample from a mu
         return np.random.choice(values,p=probabilities)
 ```
 
-The `BayesianNetwork` class also has the methods `get_nodes()` and `get_edges()` to get nodes and edges of the network and the method `plot()` to plot the Bayesian Network with the *graphviz* module.
+`BayesianNetwork` class also has the methods `get_nodes()` and `get_edges()` to get nodes and edges of the network and the method `plot()` to plot the Bayesian Network with the *graphviz* module.
 
 ## Usage
 

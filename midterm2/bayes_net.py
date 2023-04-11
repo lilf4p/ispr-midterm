@@ -123,7 +123,36 @@ class BayesNetwork:
             # add current sampling to samples
             samples[iter+1] = s
         
-        return samples        
+        return samples 
+
+    # estimate P(X=x|e) from samples agreeing with e
+    def estimate(self, X: str, x: str, e: dict, samples: dict) -> dict:
+        """ Estimate the probability of a node given a set of evidences.
+        
+        Args:
+            X (str): node to estimate.
+            x (str): value of X.
+            e (dict): evidences.
+            samples (dict): samples from the network.
+
+        Returns:
+            dict: probability distribution of X given e.
+        """
+        # count samples that agree with e
+        count = 0
+        for s in samples.values():
+            if all(s[key] == value for key, value in e.items()): count += 1
+        
+        # count samples that agree with e and X
+        count_X = 0
+        for s in samples.values():
+            if all(s[key] == value for key, value in e.items()) and s[X] == x: count_X += 1
+
+        # estimate probability
+        if count == 0: p = 0
+        else: p = count_X/count
+
+        return {X: {x: p, 'evidence':e}}       
     
     def print(self):
         """ Print on stdout the structure of the network.
