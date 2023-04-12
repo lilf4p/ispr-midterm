@@ -9,9 +9,8 @@ import graphviz
 # DONE: implement graphical representation of network
 # DONE: use graph networkx to do all the work on graph
 # DONE: check acyclicity of graph
-# TODO: notebook with examples of BN (MANDATORY)
-# TODO: COVID example (MANDATORY)
-# TODO: DAILY ROUTINE example (MANDATORY)
+# DONE: COVID example (MANDATORY)
+# DONE: DAILY ROUTINE example (MANDATORY)
 # TODO: CONSIDERATIONS
 # DONE: add readme 
 # DONE: fix graph drawing
