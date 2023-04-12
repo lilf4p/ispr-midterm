@@ -1,0 +1,5 @@
+# Colab Notebook
+https://colab.research.google.com/drive/1o9eLFu5kKJNxG78hvLFqdus3Mfcnhf0X?usp=sharing
+
+# Github Repo
+https://github.com/lilf4p/ispr-midterm/tree/main/midterm2
