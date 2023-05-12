@@ -1,0 +1,5 @@
+# Colab Notebook
+https://colab.research.google.com/drive/1XYxJ8EURZ1qt_0WLuUGx5u8aPQzndVy2?usp=sharing
+
+# Github Repo
+https://github.com/lilf4p/ispr-midterm/blob/main/midterm3/image_classification.ipynb
